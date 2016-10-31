@@ -94,7 +94,7 @@ integer :: errstat = 0
 if ( .not. allocated(coarray) ) allocate( coarray(                     &
   l1-halo:u1+halo, l2-halo:u2+halo, l3-halo:u3+halo, props)            &
   [col1:cou1, col2:cou2, col3:*], source=cgca_liquid_state,            &
-    stat=errstat)
+  stat=errstat)
 if ( errstat .ne. 0 ) then
   write (*,'(2(a,i0))') 'ERROR: cgca_m2alloc/cgca_as:&
     & allocate( coarray ), image: ', this_image(), " err. code: ",     &

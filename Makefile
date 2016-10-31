@@ -8,7 +8,8 @@ L1_OBJ=		$(L1_SRC:.f90=.o)
 
 # level 2 modules and submodules
 
-L2_SRC_MOD=     cgca_m2netcdf.f90 cgca_m2mpiio.f90 cgca_m2alloc.f90
+L2_SRC_MOD=     cgca_m2netcdf.f90 cgca_m2mpiio.f90 cgca_m2alloc.f90 \
+	 	cgca_m2phys.f90
 L2_SRC=		$(L2_SRC_MOD) 
 L2_OBJ=		$(L2_SRC:.f90=.o)
 
@@ -31,4 +32,4 @@ $(EXECUTABLE): $(ALL_OBJ)
 	$(FC)  $(ALL_OBJ) -o $@
 
 clean:
-	rm *~ *.o *.mod *.lst
+	rm -f *~ *.o *.mod *.lst ${EXECUTABLE}

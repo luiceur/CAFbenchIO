@@ -20,6 +20,7 @@ use cgca_m1co
 use cgca_m2alloc
 use cgca_m2netcdf
 use cgca_m2mpiio
+use cgca_m2phys
 
 implicit none
 
@@ -90,6 +91,9 @@ if (img ==1) then
 end if
 
 sync all
+
+! each image calculates the coarray grid dimensions
+call cgca_gdim( nimgs, ir, qual )
 
 c(1) = 58
 c(2) = 174
