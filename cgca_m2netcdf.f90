@@ -1,4 +1,3 @@
-
 !*robodoc*m* CGPACK/cgca_m2netcdf
 !  NAME
 !    cgca_m2netcdf
@@ -138,7 +137,7 @@ if ( mpisize .ne. nimgs .or. rank .ne. img-1 ) then
 end if
      
 
-! This is the global arrayy
+! This is the global array
 artsize(:) = arrsize(:) * coarsize(:)
 
 ! Correspondent portion of this global array 
