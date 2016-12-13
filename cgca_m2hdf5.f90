@@ -178,10 +178,7 @@ subroutine cgca_pswci4( coarray, stype, fname )
   ! Setup file access property list with parallel I/O access.
   CALL h5pcreate_f(H5P_FILE_ACCESS_F, plist_id, ierr)
   CALL h5pset_fapl_mpio_f(plist_id, comm, info, ierr)
-  ! debug
-  if (img .eq. 1) then
-     write (*,*) "Setup file access property list"
-  end if
+
 
   ! Create the file collectively.
   CALL h5fcreate_f(fname, H5F_ACC_TRUNC_F, file_id, ierr, &
@@ -190,65 +187,45 @@ subroutine cgca_pswci4( coarray, stype, fname )
      write(0,*) 'Unable to open: ', trim(fname), ': ', ierr
      call mpi_abort(MPI_COMM_WORLD, 1, ierr)
   endif
-  if (img .eq. 1) then
-     write (*,*) "Created a file collectively"
-  end if
+
   CALL h5pclose_f(plist_id, ierr)
-  if (img .eq. 1) then
-     write (*,*) "Close property list"
-  end if
+
   ! Create the data space for the  dataset. 
   CALL h5screate_simple_f(coardim, dimsf, filespace, ierr)
-  if (img .eq. 1) then
-     write (*,*) "Create data space for the dataset"
-  end if
+
   ! Create the dataset with default properties.
   CALL h5dcreate_f(file_id, dsetname, H5T_NATIVE_INTEGER, filespace, &
                       dset_id, ierr)
-    if (img .eq. 1) then
-       write(*,*) "Create dataset with default properties"
-    end if
-    CALL h5sclose_f(filespace, ierr)
-    if (img .eq. 1) then
-       write(*,*) "Close the dataset" 
-    end if
+
+  CALL h5sclose_f(filespace, ierr)
+
 
   ! Each process defines dataset in memory and writes it to the hyperslab
   ! in the file. 
   CALL h5screate_simple_f(coardim, count, memspace, ierr) 
-  if (img .eq. 1) then
-     write(*,*) "Each process defines dataset in mem"
-  end if
+  
   ! Select hyperslab in the file.
   CALL h5dget_space_f(dset_id, filespace, ierr)
   CALL h5sselect_hyperslab_f (filespace, H5S_SELECT_SET_F, offset, &
       count, ierr)
-  if (img .eq. 1) then
-     write(*,*) "Selects a hyperslab in the file"
-  end if
+
      
   ! Create property list for collective dataset write
   CALL h5pcreate_f(H5P_DATASET_XFER_F, plist_id, ierr) 
   CALL h5pset_dxpl_mpio_f(plist_id, H5FD_MPIO_COLLECTIVE_F, ierr)
-  if (img .eq. 1) then
-     write(*,*) "Crete property list for coll dataset"
-  end if
+
   
   ! Write the dataset collectively. 
   CALL h5dwrite_f(dset_id, H5T_NATIVE_INTEGER, coarray(1:arrsize(1),    & 
        1:arrsize(2), 1:arrsize(3), stype), dimsf, ierr,             &
        file_space_id = filespace, mem_space_id = memspace,          &
        xfer_prp = plist_id)
-  if (img .eq. 1) then
-     write(*,*) "Write dataset colectively"
-  end if
+
   
   ! Close dataspaces.
   CALL h5sclose_f(filespace, ierr)
   CALL h5sclose_f(memspace, ierr)
-  if (img .eq. 1) then
-     write(*,*) "Close stuff"
-  end if
+
   ! Close the dataset and property list.
   CALL h5dclose_f(dset_id, ierr)
   CALL h5pclose_f(plist_id, ierr)
