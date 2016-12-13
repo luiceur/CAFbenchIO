@@ -146,7 +146,7 @@ program drive
   end do
   
     ! start MPI
-  call MPI_Init(ierr)
+  !call MPI_Init(ierr)
 
   ! Loop over lfs stripe counts
   do i = 1, size( stripe_count )
